@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
-const connectDB = require('../db/config');
+// const connectDB = require('../db/config');
 const Category = require('./models/category.model');
 const runSeed = require('./seed');
 const orderRoutes = require('../routes/order');
@@ -14,7 +14,7 @@ dotenv.config();
 // Create Express app
 const app = express();
 
-connectDB();
+// connectDB();
 
 // Middleware
 app.use(cors());

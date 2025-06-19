@@ -7,17 +7,19 @@ import {
   Container,
   Paper,
   Alert,
+  MenuItem
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -31,16 +33,29 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Login submit');
     setLoading(true);
     setError('');
 
+    // Log the payload
+    console.log('Payload being sent:', formData);
+
     try {
-      const response = await authAPI.login(formData);
+      // You can also explicitly create the payload object
+      const payload = {
+        email: formData.email,
+        password: formData.password
+      };
+
+      const response = await axios.post(`${API_URL}/auth/login`, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
       if (response.data.success) {
-        // Store token and user data
         localStorage.setItem('token', response.data.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        
         toast.success('Login successful');
         navigate('/');
       }
@@ -73,19 +88,14 @@ const Login = () => {
           }}
         >
           <Typography component="h1" variant="h5" gutterBottom>
-            Restaurant Admin
+            Register
           </Typography>
-          <Typography component="h2" variant="h6" gutterBottom>
-            Sign In
-          </Typography>
-
           {error && (
             <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
               {error}
             </Alert>
           )}
-
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+          <form onSubmit={handleSubmit} style={{ marginTop: 8, width: '100%' }}>
             <TextField
               margin="normal"
               required
@@ -125,11 +135,11 @@ const Login = () => {
                 Register
               </a>
             </Typography>
-          </Box>
+          </form>
         </Paper>
       </Box>
     </Container>
   );
 };
 
-export default Login; 
+export default Register; 
