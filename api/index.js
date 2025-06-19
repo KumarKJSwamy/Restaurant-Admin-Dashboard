@@ -6,7 +6,7 @@ const path = require('path');
 // const connectDB = require('../db/config');
 const Category = require('./models/category.model');
 const runSeed = require('./seed');
-const orderRoutes = require('../routes/order');
+const orderRoutes = require('./routes/order');
 
 // Load environment variables
 dotenv.config();
